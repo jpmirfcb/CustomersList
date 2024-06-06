@@ -39,7 +39,7 @@ This is a basic API application developed using Clean Architecture principles. T
 - **Chain of Responsibility Pattern:** Handling a request by passing it through a chain of handlers
 ## Getting Started
 
-# Prerequisites
+## Prerequisites
 - .NET 8
 - MySQL
 - Docker
