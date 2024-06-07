@@ -21,6 +21,6 @@ public class CreateCustomerRequestValidator : AbstractValidator<CreateCustomerRe
         RuleFor(x => x.Phone)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Phone is required")
-            .Matches(@"^\d{10}$").WithMessage("Phone is invalid");
+            .Matches(@"^\+\d{12,14}$").WithMessage("Phone is invalid");
     }
 }

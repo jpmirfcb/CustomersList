@@ -1,58 +1,83 @@
 ﻿using CustomersList.Application.Repositories;
 using CustomersList.Domain.Entities;
+using CustomersList.Infrastructure.Abstractions.Data;
 
 namespace CustomersList.Infrastructure.Repositories;
 
-public class CustomersRepository : ICustomersRepository
+/// <summary>
+/// Repository class for managing customers.
+/// </summary>
+public class CustomersRepository : RepositoryBase<Customer>, ICustomersRepository
 {
-
-    private List<Customer> _list;
-
-    public CustomersRepository()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CustomersRepository"/> class.
+    /// </summary>
+    /// <param name="databaseConnectionFactory">The database connection factory.</param>
+    public CustomersRepository( IDatabaseConnectionFactory databaseConnectionFactory ) : base(databaseConnectionFactory)
     {
-        _list = new List<Customer>()
-        {
-            new Customer() { Id = Guid.Parse("e56e14b5-af6b-4fad-bb44-27da64136c65"), Name = "Sally", Email = "sally@company.com"},
-            new Customer() { Id = Guid.Parse("abef3e2d-39f1-4885-8e49-eea28074efb1"), Name = "Peter", Email = "peter@company.com"},
-            new Customer() { Id = Guid.Parse("4e08e02a-e4b5-4206-aa7d-88824bd19729"), Name = "Robert", Email = "bob@company.com"}
-        };
-    }
-    public Task<Customer> CreateAsync( Customer customer )
-    {
-        _list.Add(customer);
-        return Task.FromResult(customer);
     }
 
-    public Task DeleteAsync( Guid id )
+    /// <summary>
+    /// Creates a new customer asynchronously.
+    /// </summary>
+    /// <param name="customer">The customer to create.</param>
+    /// <returns>The created customer.</returns>
+    public async Task<Customer> CreateAsync( Customer customer )
     {
-        _list.RemoveAll(c => c.Id == id);
-        return Task.CompletedTask;
+        await ExecuteAsync("INSERT INTO Customers (Id, Name, Email, Phone) VALUES (@Id, @Name, @Email, @Phone)", customer);
+        return await GetByIdAsync(customer.Id);
     }
 
-    public Task<Customer> GetByIdAsync( Guid id )
+    /// <summary>
+    /// Deletes a customer asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the customer to delete.</param>
+    public async Task DeleteAsync( Guid id )
     {
-        return Task.FromResult(_list.FirstOrDefault(c => c.Id == id));
+        await ExecuteAsync("DELETE FROM Customers WHERE Id = @Id", new { Id = id });
     }
 
-    public Task<(IEnumerable<Customer>, int)> GetListAsync( int pageNumber, int pageSize )
+    /// <summary>
+    /// Retrieves a customer by ID asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the customer to retrieve.</param>
+    /// <returns>The retrieved customer.</returns>
+    public async Task<Customer> GetByIdAsync( Guid id )
     {
-        return Task.FromResult((_list.Skip((pageNumber-1) * pageSize).Take(pageSize), _list.Count));
+        return await QuerySingleAsync<Customer>("SELECT * FROM Customers WHERE Id = @Id LIMIT 1", new { Id = id });
     }
 
-    public Task UpdateAsync( Customer customer, Guid id )
+    /// <summary>
+    /// Retrieves a list of customers asynchronously.
+    /// </summary>
+    /// <param name="pageNumber">The page number of the results.</param>
+    /// <param name="pageSize">The number of customers per page.</param>
+    /// <returns>A tuple containing the list of customers and the total count.</returns>
+    public async Task<(IEnumerable<Customer>, int)> GetListAsync( int pageNumber, int pageSize )
     {
-        var existingCustomer = _list.FirstOrDefault(c => c.Id == id);
-        if(existingCustomer != null)
-        {
-            existingCustomer.Name = customer.Name;
-            existingCustomer.Email = customer.Email;
-            existingCustomer.Phone = customer.Phone;
-        }
-        return Task.CompletedTask;
+        var customers = await QueryAsync<Customer>("SELECT * FROM Customers LIMIT @PageSize OFFSET @Offset", new { PageSize = pageSize, Offset = (pageNumber - 1) * pageSize });
+        var count = await QueryEscalarAsync<int>("SELECT Count(*) From Customers");
+        return (customers, count);
     }
 
-    public Task<bool> ExistsAsync(Guid id)
+    /// <summary>
+    /// Updates a customer asynchronously.
+    /// </summary>
+    /// <param name="customer">The updated customer.</param>
+    /// <param name="id">The ID of the customer to update.</param>
+    public async Task UpdateAsync( Customer customer, Guid id )
     {
-        return Task.FromResult(_list.Any(c => c.Id == id));
+        await ExecuteAsync("UPDATE Customers SET Name = @Name, Email = @Email, Phone = @Phone WHERE Id = @Id", new { customer.Name, customer.Email, customer.Phone, Id = id });
+    }
+
+    /// <summary>
+    /// Checks if a customer exists asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the customer to check.</param>
+    /// <returns>True if the customer exists, otherwise false.</returns>
+    public async Task<bool> ExistsAsync( Guid id )
+    {
+        var customer = await QuerySingleOrDefaultAsync<Customer>("SELECT * FROM Customers WHERE Id = @Id LIMIT 1", new { Id = id });
+        return customer is not null;
     }
 }

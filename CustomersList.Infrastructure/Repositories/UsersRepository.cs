@@ -1,70 +1,94 @@
 ﻿using CustomersList.Application.Repositories;
 using CustomersList.Domain.Entities;
+using CustomersList.Infrastructure.Abstractions.Data;
 
 namespace CustomersList.Infrastructure.Repositories;
 
-public class UsersRepository : IUsersRepository
+/// <summary>
+/// Repository class for managing users.
+/// </summary>
+public class UsersRepository : RepositoryBase<User>, IUsersRepository
 {
-
-    private List<User> _users;
-
-    public UsersRepository()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UsersRepository"/> class.
+    /// </summary>
+    /// <param name="databaseConnectionFactory">The database connection factory.</param>
+    public UsersRepository( IDatabaseConnectionFactory databaseConnectionFactory )
+        : base(databaseConnectionFactory)
     {
-        _users = new List<User>
-        {
-            new User
-            {
-                Id = Guid.NewGuid(),
-                Email = "admin@domain.com",
-                Password = "4dm1n",
-                Active = true,
-                Name = "System Administrator",
-                CreatedAt = DateTime.UtcNow.AddDays(-10),
-                UpdatedAt = DateTime.UtcNow.AddDays(-10),
-                DeactivatedAt = null
-            }
-        };
     }
 
-    public Task<User> CreateAsync( User entity )
+    /// <summary>
+    /// Creates a new user asynchronously.
+    /// </summary>
+    /// <param name="entity">The user entity to create.</param>
+    /// <returns>The created user.</returns>
+    public async Task<User> CreateAsync( User entity )
     {
-        _users.Add(entity);
-        return Task.FromResult(entity);
+        await ExecuteAsync("INSERT INTO Users (Id, Name, Password, Email, Active, CreatedAt, UpdatedAt, DeactivatedAt ) VALUES (@Id, @Name, @Password, @Email, @Active, @CreatedAt, @UpdatedAt, @DeactivatedAt )", entity);
+        return await GetByIdAsync(entity.Id);
     }
 
-    public Task DeleteAsync( Guid id )
+    /// <summary>
+    /// Deletes a user asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the user to delete.</param>
+    public async Task DeleteAsync( Guid id )
     {
-        return Task.FromResult(_users.Any(c => c.Id == id));
+        await ExecuteAsync("DELETE FROM Users WHERE Id = @Id", new { Id = id });
     }
 
-    public Task<bool> ExistsAsync( Guid id )
+    /// <summary>
+    /// Checks if a user with the specified ID exists asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the user to check.</param>
+    /// <returns>True if the user exists, otherwise false.</returns>
+    public async Task<bool> ExistsAsync( Guid id )
     {
-        return Task.FromResult(_users.Any(c => c.Id == id));
+        var user = await QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE Id = @Id LIMIT 1", new { Id = id });
+        return user is not null;
     }
 
-    public Task<User> GetByEmailAsync( string email )
+    /// <summary>
+    /// Gets a user by email asynchronously.
+    /// </summary>
+    /// <param name="email">The email of the user to retrieve.</param>
+    /// <returns>The user with the specified email, or null if not found.</returns>
+    public async Task<User?> GetByEmailAsync( string email )
     {
-        return Task.FromResult(_users.FirstOrDefault(c => c.Email == email));
+        return await QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE Email = @Email LIMIT 1", new { Email = email });
     }
 
-    public Task<User> GetByIdAsync( Guid id )
+    /// <summary>
+    /// Gets a user by ID asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the user to retrieve.</param>
+    /// <returns>The user with the specified ID.</returns>
+    public async Task<User> GetByIdAsync( Guid id )
     {
-        return Task.FromResult(_users.FirstOrDefault(c => c.Id == id));
+        return await QuerySingleAsync<User>("SELECT * FROM Users WHERE Id = @Id LIMIT 1", new { Id = id });
     }
 
-    public Task<(IEnumerable<User>, int)> GetListAsync( int pageNumber, int pageSize )
+    /// <summary>
+    /// Gets a list of users asynchronously.
+    /// </summary>
+    /// <param name="pageNumber">The page number.</param>
+    /// <param name="pageSize">The page size.</param>
+    /// <returns>A tuple containing the list of users and the total count.</returns>
+    public async Task<(IEnumerable<User>, int)> GetListAsync( int pageNumber, int pageSize )
     {
-        return Task.FromResult((_users.Skip((pageNumber - 1) * pageSize).Take(pageSize), _users.Count));
+        var users = await QueryAsync<User>("SELECT * FROM Users LIMIT @PageSize OFFSET @Offset", new { PageSize = pageSize, Offset = (pageNumber - 1) * pageSize });
+        var count = await QuerySingleAsync<int>("SELECT Count(*) From Users");
+        return (users, count);
     }
 
-    public Task UpdateAsync( User entity, Guid id )
+    /// <summary>
+    /// Updates a user asynchronously.
+    /// </summary>
+    /// <param name="entity">The updated user entity.</param>
+    /// <param name="id">The ID of the user to update.</param>
+    public async Task UpdateAsync( User entity, Guid id )
     {
-        var existingCustomer = _users.FirstOrDefault(c => c.Id == id);
-        if (existingCustomer != null)
-        {
-            existingCustomer.Name = entity.Name;
-            existingCustomer.Email = entity.Email;
-        }
-        return Task.CompletedTask;
+        await ExecuteAsync("UPDATE Users SET Name = @Name, Email = @Email WHERE Id = @Id", new { entity.Name, entity.Email, Id = id });
     }
 }

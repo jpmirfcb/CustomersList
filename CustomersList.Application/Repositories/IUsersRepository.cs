@@ -4,5 +4,5 @@ namespace CustomersList.Application.Repositories;
 
 public interface IUsersRepository : IBaseRepository<User>
 {
-    Task<User> GetByEmailAsync( string email );
+    Task<User?> GetByEmailAsync( string email );
 }

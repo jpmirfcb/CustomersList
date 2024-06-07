@@ -1,4 +1,7 @@
 ﻿using CustomersList.Application.Models;
+using CustomersList.Application.Services.Authentication;
+using CustomersList.Application.Services.Customers;
+using CustomersList.Application.Services.Users;
 using CustomersList.Application.Validation.Customers;
 using CustomersList.Application.Validation.Users;
 using FluentValidation;
@@ -10,6 +13,10 @@ public static class ApplicationDependencyInjection
 {
     public static IServiceCollection AddApplication( this IServiceCollection services )
     {
+
+        services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<IUsersService, UsersService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
         services.AddScoped<IValidator<CreateCustomerRequest>, CreateCustomerRequestValidator>();

@@ -1,15 +1,10 @@
 using CustomersList.Api.Middleware;
 using CustomersList.Api.Settings;
 using CustomersList.Application;
-using CustomersList.Application.Repositories;
-using CustomersList.Application.Services.Authentication;
-using CustomersList.Application.Services.Customers;
-using CustomersList.Application.Services.Users;
-using CustomersList.Infrastructure.Repositories;
+using CustomersList.Infrastructure;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
-using FluentValidation;
 using Serilog;
 
 
@@ -22,9 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json").Build();
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .Build();
 
 builder.Services.AddSingleton<IConfiguration>(configuration);
+
 builder.Services.Configure<ApplicationSettings>(
     options =>
     {
@@ -32,13 +30,6 @@ builder.Services.Configure<ApplicationSettings>(
         .GetSection("ApplicationSettings")
         .Bind(options);
     });
-// Add services to the container.
-builder.Services.AddSingleton<ICustomersRepository, CustomersRepository>();
-builder.Services.AddSingleton<IUsersRepository, UsersRepository>();
-
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddFastEndpoints(o => o.IncludeAbstractValidators = true)
     .AddAuthenticationJwtBearer(options =>
@@ -51,7 +42,9 @@ builder.Services.AddFastEndpoints(o => o.IncludeAbstractValidators = true)
     .AddFastEndpoints()
 .SwaggerDocument();
 
-builder.Services.AddTransient(typeof(IPreProcessor<>),typeof(ValidationsPreprocessor<>));
+builder.Services.AddTransient(typeof(IPreProcessor<>), typeof(ValidationsPreprocessor<>));
+
+builder.Services.AddInfrastructure(configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
@@ -67,5 +60,7 @@ app.UseAuthentication()
     .UseAuthorization()
     .UseFastEndpoints()
     .UseSwaggerGen();
+
+app.Services.InitializeDatabase();
 
 app.Run();
