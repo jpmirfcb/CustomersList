@@ -1,4 +1,3 @@
-using CustomersList.Api.Middleware;
 using CustomersList.Api.Settings;
 using CustomersList.Application;
 using CustomersList.Infrastructure;
@@ -42,8 +41,6 @@ builder.Services.AddFastEndpoints(o => o.IncludeAbstractValidators = true)
     .AddFastEndpoints()
 .SwaggerDocument();
 
-builder.Services.AddTransient(typeof(IPreProcessor<>), typeof(ValidationsPreprocessor<>));
-
 builder.Services.AddInfrastructure(configuration);
 builder.Services.AddApplication();
 
@@ -60,7 +57,5 @@ app.UseAuthentication()
     .UseAuthorization()
     .UseFastEndpoints()
     .UseSwaggerGen();
-
-app.Services.InitializeDatabase();
 
 app.Run();

@@ -1,6 +1,7 @@
-﻿using CustomersList.Application.Repositories;
+﻿using CustomersList.Domain.Abstractions.Interfaces.Repositories;
 using CustomersList.Domain.Entities;
-using CustomersList.Infrastructure.Abstractions.Data;
+using CustomersList.Infrastructure.Abstractions.Data.Abstract;
+using CustomersList.Infrastructure.Abstractions.Data.Interfaces;
 
 namespace CustomersList.Infrastructure.Repositories;
 

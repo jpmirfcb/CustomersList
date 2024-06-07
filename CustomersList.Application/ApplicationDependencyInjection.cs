@@ -1,9 +1,12 @@
-﻿using CustomersList.Application.Models;
-using CustomersList.Application.Services.Authentication;
-using CustomersList.Application.Services.Customers;
-using CustomersList.Application.Services.Users;
-using CustomersList.Application.Validation.Customers;
-using CustomersList.Application.Validation.Users;
+﻿using AutoMapper;
+using CustomersList.Application.UseCases.Authentication.Login;
+using CustomersList.Application.UseCases.Customers.Create;
+using CustomersList.Application.UseCases.Customers.Delete;
+using CustomersList.Application.UseCases.Customers.Details;
+using CustomersList.Application.UseCases.Customers.List;
+using CustomersList.Application.UseCases.Customers.Update;
+using CustomersList.Application.UseCases.Interfaces;
+using CustomersList.Application.UseCases.Users.CreateUser;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,14 +16,23 @@ public static class ApplicationDependencyInjection
 {
     public static IServiceCollection AddApplication( this IServiceCollection services )
     {
+        services.AddAutoMapper(typeof(ApplicationDependencyInjection));
 
-        services.AddScoped<ICustomerService, CustomerService>();
-        services.AddScoped<IUsersService, UsersService>();
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        var configuration = new MapperConfiguration(cfg => cfg.AddMaps(typeof(ApplicationDependencyInjection).Assembly));
 
+
+        services.AddScoped<ICreateCustomer, CreateCustomerHandler>();
+        services.AddScoped<IUpdateCustomer, UpdateCustomerHandler>();
+        services.AddScoped<IDeleteCustomer, DeleteCustomerHandler>();
+        services.AddScoped<ICustomerDetails, CustomerDetailsHandler>();
+        services.AddScoped<ICustomersList, CustomersListHandler>();
+        services.AddScoped<ICreateUser, CreateUserHandler>();
+        services.AddScoped<IUserLogin, UserLoginHandler>();
+
+        services.AddScoped<IValidator<UserLoginRequest>, UserLoginRequestValidator>();
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
         services.AddScoped<IValidator<CreateCustomerRequest>, CreateCustomerRequestValidator>();
-        services.AddScoped<IValidator<CustomerListRequest>, CustomerListRequestValidator>();
+        services.AddScoped<IValidator<CustomersListRequest>, CustomersListRequestValidator>();
         services.AddScoped<IValidator<CustomerDetailsRequest>, CustomerDetailsRequestValidator>();
         services.AddScoped<IValidator<DeleteCustomerRequest>, DeleteCustomerRequestValidator>();
         services.AddScoped<IValidator<UpdateCustomerRequest>, UpdateCustomerRequestValidator>();
