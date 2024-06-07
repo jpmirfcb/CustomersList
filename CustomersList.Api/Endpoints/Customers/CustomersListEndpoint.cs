@@ -1,5 +1,4 @@
-﻿using CustomersList.Api.Middleware;
-using CustomersList.Application.UseCases.Customers.List;
+﻿using CustomersList.Application.UseCases.Customers.List;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
 
@@ -8,6 +7,11 @@ namespace CustomersList.Api.Endpoints.Customers;
 public class CustomersListEndpoint : Endpoint<CustomersListRequest, CustomersListResponse>
 {
     private readonly ICustomersList _customersList;
+
+    public CustomersListEndpoint( ICustomersList customersList )
+    {
+        _customersList = customersList;
+    }
 
     public override void Configure()
     {
@@ -20,7 +24,7 @@ public class CustomersListEndpoint : Endpoint<CustomersListRequest, CustomersLis
         });
     }
 
-    public override async Task HandleAsync(CustomersListRequest request, CancellationToken ct)
+    public override async Task HandleAsync( CustomersListRequest request, CancellationToken ct )
     {
         var result = await _customersList.ExecuteAsync(request, ct);
         if (result.IsSuccess)

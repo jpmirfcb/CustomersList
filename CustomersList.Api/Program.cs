@@ -7,18 +7,24 @@ using FastEndpoints.Swagger;
 using Serilog;
 
 
+var builder = WebApplication.CreateBuilder(args);
+
 var logger = Log.Logger = new LoggerConfiguration()
   .Enrich.FromLogContext()
   .WriteTo.Console()
   .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
-var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<ILoggerFactory, LoggerFactory>();
+builder.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
 var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
             .Build();
+
 
 builder.Services.AddSingleton<IConfiguration>(configuration);
 

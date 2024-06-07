@@ -1,6 +1,4 @@
 ﻿using Ardalis.Result;
-using CustomersList.Api.Middleware;
-using CustomersList.Application.Services.Customers;
 using CustomersList.Application.UseCases.Customers.Details;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
@@ -11,7 +9,7 @@ public class CustomerDetailsEndpoint : Endpoint<CustomerDetailsRequest, Customer
 {
     private readonly ICustomerDetails _customerDetails;
 
-    public CustomerDetailsEndpoint(ICustomerDetails customerDetails)
+    public CustomerDetailsEndpoint( ICustomerDetails customerDetails )
     {
         _customerDetails = customerDetails;
     }
@@ -21,7 +19,7 @@ public class CustomerDetailsEndpoint : Endpoint<CustomerDetailsRequest, Customer
         Get("/customers/{id}");
     }
 
-    public override async Task HandleAsync(CustomerDetailsRequest req, CancellationToken ct)
+    public override async Task HandleAsync( CustomerDetailsRequest req, CancellationToken ct )
     {
 
         var result = await _customerDetails.ExecuteAsync(req, ct);
@@ -33,13 +31,7 @@ public class CustomerDetailsEndpoint : Endpoint<CustomerDetailsRequest, Customer
         }
         else if (result.IsSuccess)
         {
-            await SendAsync(new CustomerDetailsResponse
-            {
-                Id = result.Value.Id,
-                Name = result.Value.Name,
-                Email = result.Value.Email,
-                Phone = result.Value.Phone
-            }, cancellation: ct);
+            await SendAsync(result, cancellation: ct);
         }
         else
         {

@@ -2,9 +2,9 @@
 
 namespace CustomersList.Application.UseCases.Users.Details;
 
-public sealed class DetailsUserRequestValidator : AbstractValidator<DetailsUserRequest>
+public sealed class UserDetailsRequestValidator : AbstractValidator<UserDetailsRequest>
 {
-    public DetailsUserRequestValidator()
+    public UserDetailsRequestValidator()
     {
         RuleFor(x => x.Id)
             .NotEmpty().WithMessage("Id is required")

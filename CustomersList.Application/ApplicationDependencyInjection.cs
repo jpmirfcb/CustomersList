@@ -7,6 +7,7 @@ using CustomersList.Application.UseCases.Customers.List;
 using CustomersList.Application.UseCases.Customers.Update;
 using CustomersList.Application.UseCases.Interfaces;
 using CustomersList.Application.UseCases.Users.CreateUser;
+using CustomersList.Application.UseCases.Users.Details;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +29,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<ICustomersList, CustomersListHandler>();
         services.AddScoped<ICreateUser, CreateUserHandler>();
         services.AddScoped<IUserLogin, UserLoginHandler>();
+        services.AddScoped<IUserDetailsHandler, UserDetailsHandler>();
 
         services.AddScoped<IValidator<UserLoginRequest>, UserLoginRequestValidator>();
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();

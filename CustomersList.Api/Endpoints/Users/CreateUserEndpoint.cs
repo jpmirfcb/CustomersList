@@ -9,6 +9,11 @@ public class CreateUserEndpoint : Endpoint<CreateUserRequest>
 
     private readonly ICreateUser _createUser;
 
+    public CreateUserEndpoint( ICreateUser createUser )
+    {
+        _createUser = createUser;
+    }
+
     public override void Configure()
     {
         Post("Users");
@@ -25,7 +30,9 @@ public class CreateUserEndpoint : Endpoint<CreateUserRequest>
         }
         else
         {
-            ThrowError(result.Errors.First());
+            result.Errors.ToList().ForEach(error => AddError(error));
+            await SendErrorsAsync(cancellation: cancellationToken);
+
         }
     }
 }

@@ -26,9 +26,9 @@ public sealed class CustomersListHandler : UseCaseQuery<CustomersListRequest, Cu
 
             return Result<CustomersListResponse>.Success(Mapper.Map<CustomersListResponse>(result));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            _logger.LogError("An error occurred while getting the list of customers.");
+            _logger.LogError(ex, "An error occurred while getting the list of customers.");
             return Result<CustomersListResponse>.Error("An error occurred while getting the list of customers.");
         }
     }

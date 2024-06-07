@@ -1,16 +1,16 @@
-﻿using CustomersList.Application.Services.Users;
+﻿using CustomersList.Application.UseCases.Interfaces;
 using CustomersList.Application.UseCases.Users.Details;
 using FastEndpoints;
 
 namespace CustomersList.Api.Endpoints.Users;
 
-public class UserDetailsEndpoint : Endpoint<DetailsUserRequest, DetailsUserResponse>
+public class UserDetailsEndpoint : Endpoint<UserDetailsRequest, UserDetailsResponse>
 {
-    private readonly IUsersService _usersService;
+    private readonly IUserDetailsHandler _usersDetailsHandler;
 
-    public UserDetailsEndpoint(IUsersService usersService)
+    public UserDetailsEndpoint( IUserDetailsHandler usersDetailsHandler )
     {
-        _usersService = usersService;
+        _usersDetailsHandler = usersDetailsHandler;
     }
 
     public override void Configure()
@@ -19,20 +19,17 @@ public class UserDetailsEndpoint : Endpoint<DetailsUserRequest, DetailsUserRespo
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(DetailsUserRequest request, CancellationToken cancellationToken)
+    public override async Task HandleAsync( UserDetailsRequest request, CancellationToken cancellationToken )
     {
-        var result = await _usersService.GetUserAsync(request.Id);
+
+        var result = await _usersDetailsHandler.ExecuteAsync(request, cancellationToken);
         if (result.IsSuccess)
         {
-            await SendAsync(new DetailsUserResponse()
-            {
-                Id = result.Value.Id,
-                Name = result.Value.Name,
-                Email = result.Value.Email
-            });
+            await SendAsync(result.Value);
             return;
         }
 
-        ThrowError("There was a problem getting the user information");
+        result.Errors.ToList().ForEach(error => AddError(error));
+        await SendErrorsAsync(cancellation: cancellationToken);
     }
 }
