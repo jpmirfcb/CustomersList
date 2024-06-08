@@ -99,7 +99,7 @@ This will take care of creating the schema and creating the application user.
 
 ## Using the API
 
-The solution also contains a Postman Collection for testing all the endpoints provided. You can import the file `CustomersList.json` from Postman to access all endpoints.
+The solution also contains a Postman Collection for testing all the endpoints provided. You can import the `[Postman Collection File](https://github.com/jpmirfcb/CustomersList/blob/main/Customers%20List.postman_collection.json)` from Postman to access all endpoints.
 
 Initially, there are no users created in the database, so the first step you should do is create a new user on Users->Create User. Use the Body tab to get access to the request payload.
 
