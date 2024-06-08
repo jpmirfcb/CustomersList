@@ -14,6 +14,7 @@ public sealed class CreateUserRequestValidator : AbstractValidator<CreateUserReq
         RuleFor(x => x.Email)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Email is required")
+            .MaximumLength(255).WithMessage("Email must not exceed 255 characters")
             .EmailAddress().WithMessage("Email is invalid");
 
         RuleFor(x => x.Password)

@@ -14,11 +14,12 @@ public sealed class CreateCustomerRequestValidator : AbstractValidator<CreateCus
         RuleFor(x => x.Email)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Email is required")
-            .EmailAddress().WithMessage("Email is invalid");
+            .EmailAddress().WithMessage("Email is invalid")
+            .MaximumLength(255).WithMessage("Name must not exceed 255 characters");
 
         RuleFor(x => x.Phone)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Phone is required")
-            .Matches(@"^\+\d{12,14}$").WithMessage("Phone is invalid");
+            .Matches(@"^\+\d{12,14}$").WithMessage("Phone is invalid. It must start with a + sign followed by 12 to 14 digits");
     }
 }

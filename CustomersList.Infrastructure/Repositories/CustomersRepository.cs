@@ -43,9 +43,19 @@ public class CustomersRepository : RepositoryBase<Customer>, ICustomersRepositor
     /// </summary>
     /// <param name="id">The ID of the customer to retrieve.</param>
     /// <returns>The retrieved customer.</returns>
-    public async Task<Customer> GetByIdAsync( Guid id )
+    public async Task<Customer?> GetByIdAsync( Guid id )
     {
-        return await QuerySingleAsync<Customer>("SELECT * FROM Customers WHERE Id = @Id LIMIT 1", new { Id = id });
+        return await QuerySingleOrDefaultAsync<Customer>("SELECT * FROM Customers WHERE Id = @Id LIMIT 1", new { Id = id });
+    }
+
+    /// <summary>
+    /// Retrieves a customer by Email asynchronously.
+    /// </summary>
+    /// <param name="email">The email of the customer to retrieve.</param>
+    /// <returns>The retrieved customer.</returns>
+    public async Task<Customer?> GetByEmailAsync( string email )
+    {
+        return await QuerySingleOrDefaultAsync<Customer>("SELECT * FROM Customers WHERE Email = @Email LIMIT 1", new { Email = email });
     }
 
     /// <summary>

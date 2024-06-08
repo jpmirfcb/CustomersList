@@ -32,7 +32,7 @@ public sealed class DeleteCustomerHandler : UseCaseCommand<DeleteCustomerRequest
             }
 
             await _customersRepository.DeleteAsync(id);
-            return Result.Success();
+            return Result.NoContent();
         }
         catch (Exception ex)
         {

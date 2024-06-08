@@ -8,7 +8,7 @@ public sealed class CreateCustomerMapperProfile : Profile
     public CreateCustomerMapperProfile()
     {
         CreateMap<CreateCustomerRequest, Customer>()
-            .ForMember(x=> x.Id, p=> Guid.NewGuid());
+            .ForMember(x => x.Id, p => p.Ignore()); 
 
         CreateMap<Customer, CreateCustomerResponse>();
     }

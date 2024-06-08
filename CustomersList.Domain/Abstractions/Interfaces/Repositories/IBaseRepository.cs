@@ -6,7 +6,7 @@ public interface IBaseRepository<T> where T : class, IEntity
 {
     public Task<(IEnumerable<T>, int)> GetListAsync( int pageNumber, int pageSize );
 
-    public Task<T> GetByIdAsync( Guid id );
+    public Task<T?> GetByIdAsync( Guid id );
 
     public Task<T> CreateAsync( T entity );
 

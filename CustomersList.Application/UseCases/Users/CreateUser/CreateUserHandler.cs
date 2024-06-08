@@ -32,7 +32,7 @@ public sealed class CreateUserHandler : UseCaseQuery<CreateUserRequest, CreateUs
             {
                 var response = Mapper.Map<CreateUserResponse>(result);
 
-                return Result<CreateUserResponse>.Success(response);
+                return Result<CreateUserResponse>.Created(response, $"users/{response.Id}");
 
             }
 

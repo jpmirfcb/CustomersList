@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomersList.Application",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB412E48-70C7-4286-8070-646899BD786A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomersList.Tests", "CustomersList.Tests\CustomersList.Tests.csproj", "{7DF101FC-FED9-4C0B-A0C5-96889B34F2B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomersList.Tests", "CustomersList.Tests\CustomersList.Tests.csproj", "{7DF101FC-FED9-4C0B-A0C5-96889B34F2B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

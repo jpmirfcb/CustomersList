@@ -33,7 +33,7 @@ public sealed class UpdateCustomerHandler : UseCaseCommand<UpdateCustomerRequest
 
             await _customersRepository.UpdateAsync(entity, id);
 
-            return Result.Success();
+            return Result.NoContent();
         }
         catch (Exception ex)
         {

@@ -9,6 +9,7 @@ public sealed class UpdateCustomerRequestValidator : AbstractValidator<UpdateCus
         RuleFor(x => x.Id)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Id is required")
+            .Must(x => !x.Equals(Guid.Empty.ToString())).WithMessage("Id is required")
             .Must(x => Guid.TryParse(x, out var _)).WithMessage("Invalid Id");
 
         RuleFor(x => x.Name)
@@ -19,6 +20,7 @@ public sealed class UpdateCustomerRequestValidator : AbstractValidator<UpdateCus
         RuleFor(x => x.Email)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Email is required")
+            .MaximumLength(255).WithMessage("Email must not exceed 255 characters")
             .EmailAddress().WithMessage("Email is invalid");
     }
 }
