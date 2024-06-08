@@ -55,13 +55,14 @@ This is a basic API application developed using Clean Architecture principles. T
 
 **FluentAssertions:** For expressive unit test assertions
 
-**Moq:** For mocking dependencies in tests
+**Moq and AutoMocker:** For mocking dependencies in tests
 
 **xUnit:** For unit testing
 
 
 ## Demonstrated Techniques
 
+- **SOLID Principles:** For OOP Development
 - **Development of RESTful APIs:** Designing and implementing RESTful endpoints
 - **Database Design:** Structuring the database schema for customer data
 - **SQL:** Writing and executing SQL queries
@@ -69,17 +70,41 @@ This is a basic API application developed using Clean Architecture principles. T
 - **Clean Architecture:** Organizing code with separation of concerns
 - **Domain-Driven Design (DDD):** Structuring code based on the domain model
 - **Test-Driven Development (TDD):** Writing tests before code to drive development
-- **Chain of Responsibility Pattern:** Handling a request by passing it through a chain of handlers
+
 ## Getting Started
 
 ## Prerequisites
 - .NET 8
 - MySQL
 - Docker
+- 
 ## Project Structure
 
-- **Api:** Contains API endpoints and request handling logic
+- **Api:** Contains API endpoints and request-handling logic
 - **Application:** Contains business logic and use cases
 - **Domain:** Contains core entities and domain logic
 - **Infrastructure:** Contains data access logic and external dependencies
-- **Tests:** Contains unit and integration tests
+- **Tests:** Contains unit and integration tests 
+
+## Loading Services
+
+The solution has a docker-compose file designed to run a docker network with 2 running instances, one for MySQL Server Community Edition and another for the API project. 
+Open a command line and navigate to the root folder for the project, then execute the following command:
+
+```
+docker-compose up --build -d
+```
+
+This will take care of creating the schema and creating the application user.
+
+## Using the API
+
+The solution also contains a Postman Collection for testing all the endpoints provided. You can import the file `CustomersList.json` from Postman to access all endpoints.
+
+Initially, there are no users created in the database, so the first step you should do is create a new user on Users->Create User. Use the Body tab to get access to the request payload.
+
+Once you have a user, please use your credentials on Authentication->LoginUser to get a new token. If the authentication is complete, a token is automatically saved in the Postman environment variables and will be added as an Authentication header on all secured requests so you can freely use the rest of the customer's API endpoints.
+
+
+
+
