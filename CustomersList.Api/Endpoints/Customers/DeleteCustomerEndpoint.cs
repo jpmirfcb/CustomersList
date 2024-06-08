@@ -1,7 +1,9 @@
-﻿using CustomersList.Application.UseCases.Abstractions;
+﻿using CustomersList.Api.Extensions;
+using CustomersList.Application.UseCases.Abstractions;
 using CustomersList.Application.UseCases.Customers.Delete;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
+using System.Threading;
 
 namespace CustomersList.Api.Endpoints.Customers;
 
@@ -30,8 +32,7 @@ public class DeleteCustomerEndpoint : Endpoint<DeleteCustomerRequest>
         }
         else
         {
-            result.Errors.ToList().ForEach(error => AddError(error));
-            await SendErrorsAsync(cancellation: ct);
+            await this.SendResultErrors(result, ct);
         }
     }
 }

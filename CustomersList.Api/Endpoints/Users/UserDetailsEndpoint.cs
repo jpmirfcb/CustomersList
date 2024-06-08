@@ -1,4 +1,5 @@
-﻿using CustomersList.Application.UseCases.Interfaces;
+﻿using CustomersList.Api.Extensions;
+using CustomersList.Application.UseCases.Interfaces;
 using CustomersList.Application.UseCases.Users.Details;
 using FastEndpoints;
 
@@ -29,7 +30,6 @@ public class UserDetailsEndpoint : Endpoint<UserDetailsRequest, UserDetailsRespo
             return;
         }
 
-        result.Errors.ToList().ForEach(error => AddError(error));
-        await SendErrorsAsync(cancellation: cancellationToken);
+        await this.SendResultErrors(result, cancellationToken);
     }
 }

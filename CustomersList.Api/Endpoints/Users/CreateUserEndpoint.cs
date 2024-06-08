@@ -1,5 +1,6 @@
 ﻿using CustomersList.Application.UseCases.Interfaces;
 using CustomersList.Application.UseCases.Users.CreateUser;
+using CustomersList.Api.Extensions;
 using FastEndpoints;
 
 namespace CustomersList.Api.Endpoints.Users;
@@ -20,7 +21,7 @@ public class CreateUserEndpoint : Endpoint<CreateUserRequest>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    public override async Task HandleAsync( CreateUserRequest request, CancellationToken cancellationToken )
     {
 
         var result = await _createUser.ExecuteAsync(request, cancellationToken);
@@ -30,9 +31,7 @@ public class CreateUserEndpoint : Endpoint<CreateUserRequest>
         }
         else
         {
-            result.Errors.ToList().ForEach(error => AddError(error));
-            await SendErrorsAsync(cancellation: cancellationToken);
-
+            await this.SendResultErrors(result, cancellationToken);
         }
     }
 }

@@ -4,6 +4,7 @@ using CustomersList.Application.UseCases.Abstractions;
 using CustomersList.Application.UseCases.Interfaces;
 using CustomersList.Domain.Abstractions.Interfaces.Repositories;
 using CustomersList.Domain.Entities;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 
 namespace CustomersList.Application.UseCases.Users.CreateUser;
@@ -23,6 +24,12 @@ public sealed class CreateUserHandler : UseCaseQuery<CreateUserRequest, CreateUs
     {
         try
         {
+            var existingUser = await _usersRepository.GetByEmailAsync(request.Email);
+            if(existingUser is not null)
+            {
+                return Result<CreateUserResponse>.Invalid(new ValidationError("Email", "The email provided is already registered", string.Empty, ValidationSeverity.Error ));
+            }
+
             var user = Mapper.Map<User>(request);
 
 

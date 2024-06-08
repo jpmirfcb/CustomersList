@@ -1,0 +1,264 @@
+{
+	"info": {
+		"_postman_id": "a7464f60-2e2f-41d8-aebf-b496faeef51d",
+		"name": "Customers List",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34202793"
+	},
+	"item": [
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Get Customer By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/Customers/2f1bba11-7d83-4486-b550-7063272ad0d5",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Customers",
+								"2f1bba11-7d83-4486-b550-7063272ad0d5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/Customers?pageNumber=1&pageSize=10",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Customers"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"Name\" : \"Steve Smith\",\r\n   \"Email\" : \"steve.smith@gmail.com\",\r\n   \"Phone\" : \"+13058214712\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/Customers",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/Customers/7e340530-51a5-4164-b8af-a5cae9a788ba",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Customers",
+								"7e340530-51a5-4164-b8af-a5cae9a788ba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"Name\" : \"A new name\",\r\n   \"Email\" : \"a new email\",\r\n   \"Phone\" : \"a new phone in the format of +584242215417\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/Customers/d5ce4d3f-aa3b-48f0-b5e4-a23a4b0e64a0",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Customers",
+								"d5ce4d3f-aa3b-48f0-b5e4-a23a4b0e64a0"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Development QA\",\r\n    \"Email\": \"development@gmail.com\",\r\n    \"Password\": \"794613031649\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/Users",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/Users/e1ebcc97-c38b-4dec-866a-f7bc83ccd2bd",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Users",
+								"e1ebcc97-c38b-4dec-866a-f7bc83ccd2bd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"development@gmail.com\",\r\n    \"Password\": \"794613031649\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/Authentication/Login",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"Authentication",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

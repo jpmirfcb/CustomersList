@@ -1,4 +1,5 @@
-﻿using CustomersList.Application.UseCases.Customers.List;
+﻿using CustomersList.Api.Extensions;
+using CustomersList.Application.UseCases.Customers.List;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
 
@@ -8,7 +9,7 @@ public class CustomersListEndpoint : Endpoint<CustomersListRequest, CustomersLis
 {
     private readonly ICustomersList _customersList;
 
-    public CustomersListEndpoint( ICustomersList customersList )
+    public CustomersListEndpoint( ICustomersList customersList)
     {
         _customersList = customersList;
     }
@@ -33,8 +34,7 @@ public class CustomersListEndpoint : Endpoint<CustomersListRequest, CustomersLis
         }
         else
         {
-            result.Errors.ToList().ForEach(error => AddError(error));
-            await SendErrorsAsync(cancellation: ct);
+            await this.SendResultErrors(result, ct);
         }
     }
 }

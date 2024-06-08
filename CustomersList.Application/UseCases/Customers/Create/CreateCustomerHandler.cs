@@ -27,7 +27,8 @@ public sealed class CreateCustomerHandler : UseCaseQuery<CreateCustomerRequest, 
             var existingCustomer = await _customersRepository.GetByEmailAsync(request.Email);
             if (existingCustomer is not null)
             {
-                return Result.Invalid(new ValidationError("The email provided already exists"));
+                _logger.LogError("Customer already exists!!!");
+                return Result.Invalid(new ValidationError("Email", "The email provided already exists","",ValidationSeverity.Error));
             }
 
             var customer = Mapper.Map<Customer>(request);

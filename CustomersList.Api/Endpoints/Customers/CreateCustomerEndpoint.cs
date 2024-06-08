@@ -1,6 +1,9 @@
-﻿using CustomersList.Application.UseCases.Customers.Create;
+﻿using Ardalis.Result;
+using CustomersList.Api.Extensions;
+using CustomersList.Application.UseCases.Customers.Create;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
+using System.Threading;
 
 namespace CustomersList.Api.Endpoints.Customers;
 
@@ -8,7 +11,7 @@ public class CreateCustomerEndpoint : Endpoint<CreateCustomerRequest, CreateCust
 {
     private readonly ICreateCustomer _createCustomer;
 
-    public CreateCustomerEndpoint(ICreateCustomer createCustomer)
+    public CreateCustomerEndpoint( ICreateCustomer createCustomer )
     {
         _createCustomer = createCustomer;
     }
@@ -27,8 +30,7 @@ public class CreateCustomerEndpoint : Endpoint<CreateCustomerRequest, CreateCust
         }
         else
         {
-            result.Errors.ToList().ForEach(error => AddError(error));
-            await SendErrorsAsync(cancellation: ct);
+            await this.SendResultErrors(result, ct);
         }
     }
 }

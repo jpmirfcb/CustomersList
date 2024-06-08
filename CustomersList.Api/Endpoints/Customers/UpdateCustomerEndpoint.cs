@@ -1,6 +1,8 @@
-﻿using CustomersList.Application.UseCases.Customers.Update;
+﻿using CustomersList.Api.Extensions;
+using CustomersList.Application.UseCases.Customers.Update;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
+using System.Threading;
 
 namespace CustomersList.Api.Endpoints.Customers;
 
@@ -27,8 +29,7 @@ public class UpdateCustomerEndpoint : Endpoint<UpdateCustomerRequest>
         }
         else
         {
-            result.Errors.ToList().ForEach(error => AddError(error));
-            await SendErrorsAsync(cancellation: ct);
+            await this.SendResultErrors(result, ct);
         }
     }
 }

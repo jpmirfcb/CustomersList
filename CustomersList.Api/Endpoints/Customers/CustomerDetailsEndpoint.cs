@@ -1,7 +1,9 @@
 ﻿using Ardalis.Result;
+using CustomersList.Api.Extensions;
 using CustomersList.Application.UseCases.Customers.Details;
 using CustomersList.Application.UseCases.Interfaces;
 using FastEndpoints;
+using System.Threading;
 
 namespace CustomersList.Api.Endpoints.Customers;
 
@@ -35,8 +37,7 @@ public class CustomerDetailsEndpoint : Endpoint<CustomerDetailsRequest, Customer
         }
         else
         {
-            result.Errors.ToList().ForEach(error => AddError(error));
-            await SendErrorsAsync(cancellation: ct);
+            await this.SendResultErrors(result, ct);
         }
     }
 }
