@@ -55,13 +55,14 @@ This is a basic API application developed using Clean Architecture principles. T
 
 **FluentAssertions:** For expressive unit test assertions
 
-**Moq:** For mocking dependencies in tests
+**Moq and AutoMocker:** For mocking dependencies in tests
 
 **xUnit:** For unit testing
 
 
 ## Demonstrated Techniques
 
+- **SOLID Principles:** For OOP Development
 - **Development of RESTful APIs:** Designing and implementing RESTful endpoints
 - **Database Design:** Structuring the database schema for customer data
 - **SQL:** Writing and executing SQL queries
@@ -69,7 +70,7 @@ This is a basic API application developed using Clean Architecture principles. T
 - **Clean Architecture:** Organizing code with separation of concerns
 - **Domain-Driven Design (DDD):** Structuring code based on the domain model
 - **Test-Driven Development (TDD):** Writing tests before code to drive development
-- **Chain of Responsibility Pattern:** Handling a request by passing it through a chain of handlers
+
 ## Getting Started
 
 ## Prerequisites
@@ -78,7 +79,7 @@ This is a basic API application developed using Clean Architecture principles. T
 - Docker
 ## Project Structure
 
-- **Api:** Contains API endpoints and request handling logic
+- **Api:** Contains API endpoints and request-handling logic
 - **Application:** Contains business logic and use cases
 - **Domain:** Contains core entities and domain logic
 - **Infrastructure:** Contains data access logic and external dependencies
